@@ -391,7 +391,34 @@ def plot_histograms_with_mean_median(data, features, title_prefix):
             plt.show()
 
 
+##############################
+# 4.3.3
+##############################
 
+# Grouping the less frequent chains to a category: "Other Chains"
+def group_rare_values(df, column_name, threshold, name_category='Other Chains'):
+    """
+    Group rare values in a specified column of a DataFrame into a new category.
+
+    Parameters:
+    - df (pd.DataFrame): The DataFrame containing the data.
+    - column_name (str): The name of the column to analyze.
+    - threshold (int): The frequency threshold below which values are grouped.
+    - other_category (str): The name of the category for rare values. Default is 'Other Chains'.
+
+    Returns:
+    - pd.DataFrame: The DataFrame with the modified column.
+    """
+    # Calculate the frequency of unique values in the specified column
+    value_frequency = df[column_name].value_counts()
+
+    # Identify values that appear less frequently than the threshold
+    rare_values = value_frequency[value_frequency < threshold].index
+
+    # Replace rare values with a new category
+    df[column_name] = df[column_name].apply(lambda x: name_category if x in rare_values else x)
+
+    return df
 
 
 
