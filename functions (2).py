@@ -32,7 +32,16 @@ import os  # OS-level operations
 
 
 
+############################################################################################################
+#----------------------------------- Functions used in EDA -----------------------------------------------
+############################################################################################################
 
+# =============================
+# Section 4
+# =============================
+
+
+# ----- 4.3 ----- 
 
 def convert_columns_to_dtype(df, columns, dtype):
     """
@@ -48,78 +57,10 @@ def convert_columns_to_dtype(df, columns, dtype):
     """
     for column in columns:
         df[column] = df[column].astype(dtype)
+                
 
 
-
-def group_rare_values(df, column, threshold, new_category):
-    """
-    Group rare values in a specified column into a new category.
-
-    Parameters:
-    - df (pd.DataFrame): The input dataframe.
-    - column (str): The column to process.
-    - threshold (int): The frequency threshold below which values are grouped.
-    - new_category (str): The name for the new category (default is 'Other Chains').
-
-    Returns:
-    - None: Modifies the dataframe in-place.
-    """
-    # Calculate the frequency of unique values in the column
-    value_counts = df[column].value_counts()
-
-    # Identify rare values that appear less frequently than the threshold
-    rare_values = value_counts[value_counts < threshold].index
-
-    # Replace rare values with a new category
-    df[column] = df[column].apply(lambda x: new_category if x in rare_values else x)
-
-
-
-def plot_category_distribution(df, column, title, figsize, rotation, color):
-    """
-    Create a bar plot showing the distribution of categories in a specified column.
-
-    Parameters:
-    - df (pd.DataFrame): The input dataframe.
-    - column (str): The column to visualize.
-    - title (str): The title of the plot.
-    - figsize (tuple): The size of the figure.
-    - rotation (int): The rotation angle for x-axis labels.
-    - color (str): The color of the bars.
-
-    Returns:
-    - None: Displays the plot.
-    """
-    # Set the visual style
-    plt.style.use('ggplot')
-    
-    # Create the figure
-    plt.figure(figsize=figsize)
-    
-    # Generate the bar plot
-    sns.countplot(
-        data=df, 
-        x=column, 
-        order=df[column].value_counts().index, 
-        color=color
-    )
-    
-    # Add title and labels
-    plt.title(title)
-    plt.xlabel(f'{column} Categories')
-    plt.ylabel('Count')
-    
-    # Rotate x-axis labels
-    plt.xticks(rotation=rotation, ha='right')
-    
-    # Adjust layout to prevent overlapping
-    plt.tight_layout()
-    
-    # Display the plot
-    plt.show()
-
-
-
+# ----- 4.4 -----
 def find_and_count_duplicates_index_version(df):
     """
     Find and count duplicate rows based on the dataframe's index.
@@ -144,10 +85,10 @@ def find_and_count_duplicates_index_version(df):
     
     print(f"Duplicate count for each '{index_name}' (index of the dataframe):")
     print(duplicate_counts)
-    print(f"\nTotal duplicated rows based on '{index_name}': {total_duplicates}")
+    print(f"\nTotal duplicated rows based on '{index_name}': {total_duplicates}")    
+    
 
-
-
+# ----- 4.4.1 -----
 def remove_duplicates_by_index(df, index_column):
     """
     Remove duplicate rows based on the dataframe's index and verify the cleanup, modifying the dataframe in place.
@@ -171,10 +112,11 @@ def remove_duplicates_by_index(df, index_column):
     # Verify if duplicates were successfully removed
     remaining_duplicates = df.index.duplicated(keep=False).sum()
     
-    print(f"Remaining duplicated rows based on '{index_column}' after cleanup: {remaining_duplicates}")
+    print(f"Remaining duplicated rows based on '{index_column}' after cleanup: {remaining_duplicates}")   
+    
+    
 
-
-
+# ----- 4.6 -----
 def calculate_categorical_statistics(df):
     """
     Calculate descriptive statistics for categorical variables in the DataFrame,
@@ -213,10 +155,10 @@ def calculate_categorical_statistics(df):
 
     # Convert results to DataFrame and return transposed for readability
     final_statistics = pd.DataFrame(results).T
-    return final_statistics
+    return final_statistics  
 
 
-
+# ----- 4.7.1 and 4.7.2 -----
 def display_value_counts_by_type(df, dtypes):
     """
     Display the value counts for columns of specified data types in the dataframe.
@@ -235,9 +177,7 @@ def display_value_counts_by_type(df, dtypes):
     for column in selected_columns:
         print(f"Value counts for column:")
         print(df[column].value_counts(), "\n", "\n")
-
-
-
+        
 def replace_column_value(df, column, old_value, new_value):
     """
     Replace occurrences of a specific value in a given column with a new value.
@@ -252,9 +192,9 @@ def replace_column_value(df, column, old_value, new_value):
     - None: Modifies the dataframe in-place.
     """
     df.loc[df[column] == old_value, column] = new_value
+    
 
-
-
+# ----- 4.8 -----
 def calculate_order_difference(df):
     """
     Calculate the difference in days between first and last orders.
@@ -266,8 +206,7 @@ def calculate_order_difference(df):
     - None: Modifies the dataframe in-place.
     """
     df.loc[:, 'dif_order'] = df['last_order'] - df['first_order']
-
-
+    
 def compute_total_cuisine(df):
     """
     Compute the total amount spent across all cuisine types.
@@ -294,7 +233,6 @@ def add_total_cuisine_to_df(df):
     df.loc[:, 'tot_CUI'] = df[compute_total_cuisine(df)].sum(axis=1)
 
 
-
 def calculate_work_leisure_days(df):
     """
     Calculate total orders on workdays and leisure days.
@@ -309,36 +247,9 @@ def calculate_work_leisure_days(df):
     leisure_days = ['DOW_0', 'DOW_5', 'DOW_6']     # Sunday (DOW_0), Friday, and Saturday
 
     df.loc[:, 'tot_work_days'] = df[work_days].sum(axis=1)
-    df.loc[:, 'tot_leisure_days'] = df[leisure_days].sum(axis=1)
+    df.loc[:, 'tot_leisure_days'] = df[leisure_days].sum(axis=1)  
 
-
-
-def compute_total_products_by_week():
-    """
-    Compute the total products across all days in a week.
-
-    Parameters:
-    - None.
-
-    Returns:
-    - pd.Series: A series containing the total products for each row by week.
-    """
-    total_products_by_week = [f'DOW_{i}' for i in range(7)]
-    return total_products_by_week
-
-def compute_total_products_by_day():
-    """
-    Compute the total products across all hours in a day.
-
-    Parameters:
-    - None.
-
-    Returns:
-    - pd.Series: A series containing the total products for each row by day.
-    """
-    total_products_by_day = [f'HR_{i}' for i in range(24)]
-    return total_products_by_day
-
+    
 def add_total_products_to_df(df):
     """
     Add columns for total products by week and total products by day to the dataframe.
@@ -385,28 +296,11 @@ def calculate_cuisine_groups(df):
     """
     df.loc[:, 'tot_western_cuisines'] = df[['CUI_American', 'CUI_Italian', 'CUI_Cafe', 'CUI_Street Food / Snacks']].sum(axis=1)
     df.loc[:, 'tot_oriental_cuisines'] = df[['CUI_Asian', 'CUI_Chinese', 'CUI_Indian', 'CUI_Japanese', 'CUI_Thai', 'CUI_Noodle Dishes']].sum(axis=1)
-    df.loc[:, 'tot_other_cuisines'] = df[['CUI_Beverages', 'CUI_Desserts', 'CUI_Healthy', 'CUI_Chicken Dishes', 'CUI_OTHER']].sum(axis=1)
+    df.loc[:, 'tot_other_cuisines'] = df[['CUI_Beverages', 'CUI_Desserts', 'CUI_Healthy', 'CUI_Chicken Dishes', 'CUI_OTHER']].sum(axis=1) 
+    
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+# ----- 4.9.1 -----
 def check_column_match(df, column_to_check, reference_column):
     """
     Check if a specified column matches a reference column 
@@ -480,18 +374,37 @@ def fill_missing_values(df, column_name, method):
         df[column_name] = df[column_name].fillna(method(df))
 
 
+# ----- 4.9.2.2 -----
+def compute_total_products_by_week():
+    """
+    Compute the total products across all days in a week.
+
+    Parameters:
+    - None.
+
+    Returns:
+    - pd.Series: A series containing the total products for each row by week.
+    """
+    total_products_by_week = [f'DOW_{i}' for i in range(7)]
+    return total_products_by_week
 
 
+# ----- 4.9.2.3 -----
+def compute_total_products_by_day():
+    """
+    Compute the total products across all hours in a day.
+
+    Parameters:
+    - None.
+
+    Returns:
+    - pd.Series: A series containing the total products for each row by day.
+    """
+    total_products_by_day = [f'HR_{i}' for i in range(24)]
+    return total_products_by_day
 
 
-
-
-
-
-
-
-    
-
+# ----- 4.9.3.1 -----
 def calculate_period_trend_by_time(df):
     """
     Creates a DataFrame showing the total orders for each cuisine group across different time periods.
@@ -575,7 +488,7 @@ def calculate_period_trend_by_cuisine(df):
     }, index=['Early Morning', 'Breakfast', 'Lunch', 'Afternoon', 'Dinner', 'Late Night'])
 
 
-
+# ----- 4.9.3.2 -----
 def calculate_work_leisure_trend_by_daytype(df):
     """
     Creates a DataFrame showing total orders on work and leisure days by cuisine groups.
@@ -627,6 +540,8 @@ def calculate_work_leisure_trend_by_cuisine(df):
     }, index=['Western', 'Oriental', 'Other'])
 
 
+
+# ----- 4.9.3.3 -----
 
 def calculate_period_trend_by_day_type(df):
     """
@@ -698,8 +613,11 @@ def calculate_period_trend_by_time_period(df):
         ]
     }, index=['Work Days', 'Leisure Days'])
 
+# =============================
+# Section 5
+# =============================
 
-
+# ----- 5.1.1  -----
 def number_bins_sturges(data):
     '''
     Calculates the number of bins based on the number of data points, using Sturges' rule
@@ -715,12 +633,82 @@ def number_bins_sturges(data):
     bins = np.ceil(np.log2(n) + 1) # np.log2 computes the base-2 logarithm of n, and np.ceil rounds the result up to the next whole number.
     return int(bins)
 
+ 
+
+# =============================
+# Section 6
+# =============================
 
 
-import matplotlib.pyplot as plt
-import seaborn as sns
-import numpy as np
-from scipy.stats import skewnorm
+# ----- 6.1  -----
+def group_rare_values(df, column, threshold, new_category):
+    """
+    Group rare values in a specified column into a new category.
+
+    Parameters:
+    - df (pd.DataFrame): The input dataframe.
+    - column (str): The column to process.
+    - threshold (int): The frequency threshold below which values are grouped.
+    - new_category (str): The name for the new category (default is 'Other Chains').
+
+    Returns:
+    - None: Modifies the dataframe in-place.
+    """
+    # Calculate the frequency of unique values in the column
+    value_counts = df[column].value_counts()
+
+    # Identify rare values that appear less frequently than the threshold
+    rare_values = value_counts[value_counts < threshold].index
+
+    # Replace rare values with a new category
+    df[column] = df[column].apply(lambda x: new_category if x in rare_values else x)
+
+def plot_category_distribution(df, column, title, figsize, rotation, color):
+    """
+    Create a bar plot showing the distribution of categories in a specified column.
+
+    Parameters:
+    - df (pd.DataFrame): The input dataframe.
+    - column (str): The column to visualize.
+    - title (str): The title of the plot.
+    - figsize (tuple): The size of the figure.
+    - rotation (int): The rotation angle for x-axis labels.
+    - color (str): The color of the bars.
+
+    Returns:
+    - None: Displays the plot.
+    """
+    # Set the visual style
+    plt.style.use('ggplot')
+    
+    # Create the figure
+    plt.figure(figsize=figsize)
+    
+    # Generate the bar plot
+    sns.countplot(
+        data=df, 
+        x=column, 
+        order=df[column].value_counts().index, 
+        color=color
+    )
+    
+    # Add title and labels
+    plt.title(title)
+    plt.xlabel(f'{column} Categories')
+    plt.ylabel('Count')
+    
+    # Rotate x-axis labels
+    plt.xticks(rotation=rotation, ha='right')
+    
+    # Adjust layout to prevent overlapping
+    plt.tight_layout()
+    
+    # Display the plot
+    plt.show()
+
+
+
+# ----- 6.2.1  -----
 
 def plot_histograms_with_mean_median(data, features, title_prefix):
     """
@@ -762,7 +750,7 @@ def plot_histograms_with_mean_median(data, features, title_prefix):
 
 
 
-
+# ----- 6.3.1  -----
 
 def create_limits_table(q1, q3, iqr, lower_lim, upper_lim):
     """
