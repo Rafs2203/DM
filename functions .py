@@ -766,6 +766,21 @@ def calculate_period_trend_by_time_period(df):
 
 # ----- 6.1.1  -----
 
+def number_bins_sturges(data):
+    '''
+    Calculates the number of bins based on the number of data points, using Sturges' rule
+    Sturges' rule: k = log2(n) + 1
+
+    Requires: The dataset for which the number of bins is to be calculated.
+    Ensures:
+        - The returned value is a positive integer representing the number of bins.
+        - The number of bins increases logarithmically as the dataset size increases.
+    '''
+
+    n = len(data)
+    bins = np.ceil(np.log2(n) + 1) # np.log2 computes the base-2 logarithm of n, and np.ceil rounds the result up to the next whole number.
+    return int(bins)
+
 def metric_features_histogram(df, features_groups, title, color, use_log):
     """
     Plot dynamic histograms for specified groups of features with adjustable layout and style.
@@ -1517,6 +1532,12 @@ def apply_manual_filters(df):
 
 # ----- 7.4.2  -----
 
+def cramers_v(x, y):
+    contingency_table = pd.crosstab(x, y)
+    chi2 = chi2_contingency(contingency_table)[0]
+    n = contingency_table.sum().sum()
+    r, k = contingency_table.shape
+    return np.sqrt(chi2 / (n * (min(r, k) - 1)))
 
 def plot_cramers_v_heatmap(df, categorical_features, figsize, cmap, annot):
     """
