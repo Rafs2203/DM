@@ -766,7 +766,7 @@ def calculate_period_trend_by_time_period(df):
 
 # ----- 6.1.1  -----
 
-def metric_features_histogram (df, features_groups, title, color, use_log):
+def metric_features_histogram(df, features_groups, title, color, use_log):
     """
     Plot dynamic histograms for specified groups of features with adjustable layout and style.
 
