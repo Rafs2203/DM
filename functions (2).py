@@ -761,26 +761,10 @@ def calculate_period_trend_by_time_period(df):
     
 
 # =============================
-# Section 5
+# Section 6
 # =============================
 
-# ----- 5.1.1  -----
-def number_bins_sturges(data):
-    '''
-    Calculates the number of bins based on the number of data points, using Sturges' rule
-    Sturges' rule: k = log2(n) + 1
-
-    Requires: The dataset for which the number of bins is to be calculated.
-    Ensures:
-        - The returned value is a positive integer representing the number of bins.
-        - The number of bins increases logarithmically as the dataset size increases.
-    '''
-
-    n = len(data)
-    bins = np.ceil(np.log2(n) + 1) # np.log2 computes the base-2 logarithm of n, and np.ceil rounds the result up to the next whole number.
-    return int(bins)
-
- 
+# ----- 6.1.1  -----
 
 def metric_features_histogram (df, features_groups, title, color, use_log):
     """
@@ -824,7 +808,7 @@ def metric_features_histogram (df, features_groups, title, color, use_log):
         plt.show()
 
 
-
+# ----- 6.1.2 and 7.3.2  -----
 def plot_boxplots(data, title, metric_features):
   '''
   Plots box plots for a set of numeric features in a dataset, organized across multiple figures
@@ -858,77 +842,9 @@ def plot_boxplots(data, title, metric_features):
       plt.suptitle(title, fontsize=20, y=0.95)
       plt.tight_layout(rect=[0, 0, 1, 0.95])
       plt.show()
-# =============================
-# Section 6
-# =============================
-
-
-# ----- 6.1  -----
-def group_rare_values(df, column, threshold, new_category):
-    """
-    Group rare values in a specified column into a new category.
-
-    Parameters:
-    - df (pd.DataFrame): The input dataframe.
-    - column (str): The column to process.
-    - threshold (int): The frequency threshold below which values are grouped.
-    - new_category (str): The name for the new category (default is 'Other Chains').
-
-    Returns:
-    - None: Modifies the dataframe in-place.
-    """
-    # Calculate the frequency of unique values in the column
-    value_counts = df[column].value_counts()
-
-    # Identify rare values that appear less frequently than the threshold
-    rare_values = value_counts[value_counts < threshold].index
-
-    # Replace rare values with a new category
-    df[column] = df[column].apply(lambda x: new_category if x in rare_values else x)
-
-def plot_category_distribution(df, column, title, figsize, rotation, color):
-    """
-    Create a bar plot showing the distribution of categories in a specified column.
-
-    Parameters:
-    - df (pd.DataFrame): The input dataframe.
-    - column (str): The column to visualize.
-    - title (str): The title of the plot.
-    - figsize (tuple): The size of the figure.
-    - rotation (int): The rotation angle for x-axis labels.
-    - color (str): The color of the bars.
-
-    Returns:
-    - None: Displays the plot.
-    """
-    # Set the visual style
-    plt.style.use('ggplot')
-    
-    # Create the figure
-    plt.figure(figsize=figsize)
-    
-    # Generate the bar plot
-    sns.countplot(
-        data=df, 
-        x=column, 
-        order=df[column].value_counts().index, 
-        color=color
-    )
-    
-    # Add title and labels
-    plt.title(title)
-    plt.xlabel(f'{column} Categories')
-    plt.ylabel('Count')
-    
-    # Rotate x-axis labels
-    plt.xticks(rotation=rotation, ha='right')
-    
-    # Adjust layout to prevent overlapping
-    plt.tight_layout()
-    
-    # Display the plot
-    plt.show()
-
+      
+      
+# ----- 6.1.3  -----
 
 def plot_values(df, columns, title, xlabel, ylabel, color, figsize, rotation, ha, use_mean):
     """
@@ -964,10 +880,8 @@ def plot_values(df, columns, title, xlabel, ylabel, color, figsize, rotation, ha
     plt.ylabel(ylabel)
     plt.xticks(rotation=rotation, ha=ha)
     plt.show()
-
-
-
-
+    
+# ----- 6.2.1  -----    
 def plot_pairwise_relationships(df, features, title, diag_kind, fontsize):
     """
     Plot pairwise relationships between numerical features in a dataframe.
@@ -991,10 +905,11 @@ def plot_pairwise_relationships(df, features, title, diag_kind, fontsize):
 
     # Show the plot
     plt.show()
-
-
+    
+# ----- 6.2.2  -----
 
 def plot_filtered_correlation_heatmap(df, features, method, filter_expr, title, figsize, annot, fmt, cmap):
+    # In addition to its use in this section, we have also included it in section 7.4.1
     """
     Plot a filtered heatmap for the correlation matrix of selected features.
 
@@ -1036,8 +951,8 @@ def plot_filtered_correlation_heatmap(df, features, method, filter_expr, title, 
 
     # Display the heatmap
     plt.show()
-
-
+    
+# ----- 6.3  -----
 
 def plot_categorical_frequencies(df, features, title, color_or_palette, figsize, rotation):
     """
@@ -1088,9 +1003,8 @@ def plot_categorical_frequencies(df, features, title, color_or_palette, figsize,
 
     # Display the figure
     plt.show()
-
-
-
+    
+# ----- 6.4  -----
 
 def plot_categorical_relationships(df, cat1, cat2, colors, figsize):
     """
@@ -1133,10 +1047,7 @@ def plot_categorical_relationships(df, cat1, cat2, colors, figsize):
     # Adjust layout
     plt.tight_layout()
     plt.show()
-
-
-
-
+    
 
 def plot_countplot_with_hue(df, x_column, hue_column, title, xlabel, ylabel, palette, figsize, rotation, ha, legend_title, legend_bbox_to_anchor, legend_loc):
     """
@@ -1182,7 +1093,9 @@ def plot_countplot_with_hue(df, x_column, hue_column, title, xlabel, ylabel, pal
     
     # Show the plot
     plt.show()
-
+    
+    
+# ----- 6.5.1  -----
 
 def plot_aggregated_values_by_category(df, group_by_column, value_column, aggregation, title, xlabel, ylabel, palette, figsize, rotation):
     """
@@ -1305,7 +1218,7 @@ def calculate_max_by_group(df, group_by_column, value_columns):
 
 
 
-
+# ----- 6.5.2  -----
 
 def plot_boxplot(df, x_column, y_column, hue_column, palette, figsize, title, xlabel, ylabel, rotation):
     """
@@ -1401,9 +1314,79 @@ def plot_boxplot_by_grouped_columns(df, columns, filter_column, y_column, figsiz
     plt.tight_layout()
     plt.show()
 
+      
+# =============================
+# Section 7
+# =============================
 
 
-# ----- 6.2.1  -----
+# ----- 7.1  -----
+def group_rare_values(df, column, threshold, new_category):
+    """
+    Group rare values in a specified column into a new category.
+
+    Parameters:
+    - df (pd.DataFrame): The input dataframe.
+    - column (str): The column to process.
+    - threshold (int): The frequency threshold below which values are grouped.
+    - new_category (str): The name for the new category (default is 'Other Chains').
+
+    Returns:
+    - None: Modifies the dataframe in-place.
+    """
+    # Calculate the frequency of unique values in the column
+    value_counts = df[column].value_counts()
+
+    # Identify rare values that appear less frequently than the threshold
+    rare_values = value_counts[value_counts < threshold].index
+
+    # Replace rare values with a new category
+    df[column] = df[column].apply(lambda x: new_category if x in rare_values else x)
+
+def plot_category_distribution(df, column, title, figsize, rotation, color):
+    """
+    Create a bar plot showing the distribution of categories in a specified column.
+
+    Parameters:
+    - df (pd.DataFrame): The input dataframe.
+    - column (str): The column to visualize.
+    - title (str): The title of the plot.
+    - figsize (tuple): The size of the figure.
+    - rotation (int): The rotation angle for x-axis labels.
+    - color (str): The color of the bars.
+
+    Returns:
+    - None: Displays the plot.
+    """
+    # Set the visual style
+    plt.style.use('ggplot')
+    
+    # Create the figure
+    plt.figure(figsize=figsize)
+    
+    # Generate the bar plot
+    sns.countplot(
+        data=df, 
+        x=column, 
+        order=df[column].value_counts().index, 
+        color=color
+    )
+    
+    # Add title and labels
+    plt.title(title)
+    plt.xlabel(f'{column} Categories')
+    plt.ylabel('Count')
+    
+    # Rotate x-axis labels
+    plt.xticks(rotation=rotation, ha='right')
+    
+    # Adjust layout to prevent overlapping
+    plt.tight_layout()
+    
+    # Display the plot
+    plt.show()
+
+# ----- 7.2.1  -----
 
 def plot_histograms_with_mean_median(data, features, title_prefix):
     """
@@ -1442,11 +1425,33 @@ def plot_histograms_with_mean_median(data, features, title_prefix):
             ax.set_title(f"{title_prefix}: {feature}", fontsize=15)
             plt.show()
 
+# ----- 7.2.2  -----
+def clean_and_fill_with_mode(df, column, replace_values, mode_fill=True):
+    """
+    Replace specified values with NaN and optionally fill missing values with the column's mode.
+
+    Parameters:
+    - df (pd.DataFrame): The input dataframe.
+    - column (str): The column to clean and fill.
+    - replace_values (list): List of values to replace with NaN.
+    - mode_fill (bool): If True, fill missing values with the column's mode. Default is True.
+
+    Returns:
+    - pd.DataFrame: The modified dataframe with updated column.
+    """
+    # Replace specified values with NaN
+    df[column] = df[column].replace(replace_values, np.nan)
+    
+    # Optionally fill missing values with the column's mode
+    if mode_fill:
+        mode_value = df[column].mode()[0]
+        df[column] = df[column].fillna(mode_value)
+    
+    return df
 
 
 
-
-# ----- 6.3.1  -----
+# ----- 7.3.1  -----
 
 def create_limits_table(q1, q3, iqr, lower_lim, upper_lim):
     """
@@ -1473,31 +1478,8 @@ def create_limits_table(q1, q3, iqr, lower_lim, upper_lim):
 
 
 
-def clean_and_fill_with_mode(df, column, replace_values, mode_fill=True):
-    """
-    Replace specified values with NaN and optionally fill missing values with the column's mode.
 
-    Parameters:
-    - df (pd.DataFrame): The input dataframe.
-    - column (str): The column to clean and fill.
-    - replace_values (list): List of values to replace with NaN.
-    - mode_fill (bool): If True, fill missing values with the column's mode. Default is True.
-
-    Returns:
-    - pd.DataFrame: The modified dataframe with updated column.
-    """
-    # Replace specified values with NaN
-    df[column] = df[column].replace(replace_values, np.nan)
-    
-    # Optionally fill missing values with the column's mode
-    if mode_fill:
-        mode_value = df[column].mode()[0]
-        df[column] = df[column].fillna(mode_value)
-    
-    return df
-
-
-
+# ----- 7.3.2  -----
 
 def apply_manual_filters(df):
     """
@@ -1533,24 +1515,7 @@ def apply_manual_filters(df):
     return df[filters]
 
 
-
-def cramers_v(x, y):
-    """
-    Calculate Cramér's V for two categorical variables.
-
-    Parameters:
-    - x (pd.Series): The first categorical variable.
-    - y (pd.Series): The second categorical variable.
-
-    Returns:
-    - float: Cramér's V value.
-    """
-    contingency_table = pd.crosstab(x, y)
-    chi2 = chi2_contingency(contingency_table)[0]
-    n = contingency_table.sum().sum()
-    r, k = contingency_table.shape
-    return np.sqrt(chi2 / (n * (min(r, k) - 1)))
-
+# ----- 7.4.2  -----
 
 
 def plot_cramers_v_heatmap(df, categorical_features, figsize, cmap, annot):
@@ -1590,7 +1555,7 @@ def plot_cramers_v_heatmap(df, categorical_features, figsize, cmap, annot):
     plt.show()
 
 
-
+# ----- 7.5 -----
 
 def plot_scaled_boxplots(df_original, df_minmax, df_standard, features, figsize):
     """
