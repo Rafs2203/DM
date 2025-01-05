@@ -1509,20 +1509,20 @@ def apply_manual_filters(df):
     """
     filters = (
         (df['vendor_count'] <= 30) &
-        (df['product_count'] <= 100) &
+        (df['product_count'] <= 75) &
         (df['tot_CUI'] <= 500) &
         (df['tot_work_days'] <= 30) &
         (df['tot_leisure_days'] <= 30) &
         (df['total_products_by_week'] <= 50) &
         (df['total_products_by_day'] <= 50) &
         (df['tot_early_morning'] <= 20) &
-        (df['tot_breakfast'] <= 25) &
+        (df['tot_breakfast'] <= 20) &
         (df['tot_lunch'] <= 20) &
         (df['tot_afternoon'] <= 20) &
         (df['tot_dinner'] <= 20) &
         (df['tot_late_night'] <= 8) &
         (df['tot_western_cuisines'] <= 250) &
-        (df['tot_oriental_cuisines'] <= 300) &
+        (df['tot_oriental_cuisines'] <= 250) &
         (df['tot_other_cuisines'] <= 150) &
         (df['purchased_cuisines'] <= 6)
     )
