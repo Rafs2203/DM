@@ -17,6 +17,7 @@ import matplotlib.colors as mpl_colors
 from matplotlib.patches import RegularPolygon
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 from matplotlib import colorbar
+from sklearn.metrics import davies_bouldin_score, calinski_harabasz_score
 
 
 # --
